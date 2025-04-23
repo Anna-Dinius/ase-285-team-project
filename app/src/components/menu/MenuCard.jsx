@@ -12,7 +12,8 @@ export default function MenuCard({
 }) {
 	const navigate = useNavigate();
 	const [localTitle, setLocalTitle] = useState(title);
-	const [localDescription, setLocalDescription] = useState(description);
+	const [localDescription, setLocalDescription] =
+		useState(description);
 
 	const handleTitleChange = (e) => {
 		const newTitle = e.target.value;
@@ -31,7 +32,6 @@ export default function MenuCard({
 			state: { menuTitle: localTitle }, // passing the editable title
 		});
 	};
-	
 
 	return (
 		<div className='menu-card'>
@@ -56,7 +56,10 @@ export default function MenuCard({
 				<p className='menu-description'>{description}</p>
 			)}
 
-			<button onClick={toMenu} className='view-menu-button'>
+			<button
+				onClick={toMenu}
+				className='view-menu-button'
+			>
 				{buttonLabel}
 			</button>
 		</div>

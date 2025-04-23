@@ -3,15 +3,23 @@ import '../css/Header.scss';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
+import checkAuthStatus from '../js/auth';
 
 function Header() {
 	const navigate = useNavigate();
-	const authorized = false;
+	var isAuthenticated = false;
+	const response = checkAuthStatus();
+	var user = response.user;
+	var isAuthenticated = response.isAuthenticated;
+
+	if (user) {
+		isAuthenticated = true;
+	}
 
 	const toHome = (event) => {
 		event.preventDefault();
 
-		if (authorized === false) {
+		if (isAuthenticated === false) {
 			navigate('/');
 		} else {
 			navigate('/dashboard');
@@ -29,7 +37,7 @@ function Header() {
 				</h1>
 			</div>
 			<div className='header-right'>
-				<ProfileIcon />
+				{isAuthenticated ? <ProfileIcon /> : <></>}
 			</div>
 		</header>
 	);

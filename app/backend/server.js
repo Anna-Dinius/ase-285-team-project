@@ -6,6 +6,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 mongoose
 	.connect(process.env.MONGO_URI, {
@@ -16,6 +17,7 @@ mongoose
 	.catch((err) =>
 		console.error('Error connecting to MongoDB:', err)
 	);
+
 // Create an instance of an Express application
 const app = express();
 
@@ -26,7 +28,15 @@ connectDB();
 // Tells Express to automatically parse incoming JSON in requests
 app.use(express.json());
 
-app.use(cors({ origin: 'http://localhost:3000' })); // Allow requests from the frontend
+// Allow requests from the frontend
+app.use(
+	cors({
+		origin: 'http://localhost:3000',
+		credentials: true,
+	})
+);
+
+app.use(cookieParser());
 
 // ROUTES
 // All endpoints related to menus will be handled in menuRoutes.js

@@ -1,6 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+const jwt = require('jsonwebtoken');
+
+router.get('/check-auth', (req, res) => {
+	console.log('Cookies: ', req.cookies);
+	const token = req.cookies.token; // Extract the token from the cookie
+
+	if (!token) {
+		return res.status(401).json({
+			isAuthenticated: false,
+			message: 'No token provided',
+		});
+	}
+
+	try {
+		const decoded = jwt.verify(
+			token,
+			process.env.JWT_SECRET
+		); // Verify the token
+		res
+			.status(200)
+			.json({ isAuthenticated: true, user: decoded });
+	} catch (err) {
+		res.status(403).json({
+			isAuthenticated: false,
+			message: 'Invalid or expired token',
+		});
+	}
+});
 
 // @route   GET /api/auth/signin
 // @desc    Get a user
@@ -15,19 +43,52 @@ router.post('/signin', async (req, res) => {
 
 		const filters = {
 			email: req.body.email,
+			password: req.body.password,
 		};
-		const foundUser = await User.findOne({
-			email: 'johndoe@todosburgers.com',
-			password: '123',
-		});
+		const foundUser = await User.findOne(filters);
 
 		if (foundUser) {
 			console.log('Found user in db');
-			res.status(200).json(foundUser);
+
+			// Create JWT token with user's email & status
+			const token = jwt.sign(
+				{
+					email: foundUser.email,
+					isAdmin: foundUser.admin,
+				},
+				process.env.JWT_SECRET,
+				{
+					expiresIn: '1h',
+				}
+			);
+
+			// console.log('reached response');
+
+			res.cookie('token', token, {
+				httpOnly: true,
+				secure: true,
+				path: '/',
+			});
+
+			res.writeHead(200, {
+				'Set-Cookie': `token=token; HttpOnly`,
+				'access-control-allow-credentials': 'true',
+			});
+
+			console.log(
+				'Set-Cookie:',
+				res.getHeaders()['set-cookie']
+			);
+
+			// res.status(200).json(foundUser);
+			res.status(200).json({
+				success: true,
+				message: 'User successfully logged in.',
+			});
 		} else {
 			// Email and/or password is wrong or doesn't exist
 			res.status(401).json({
-				error: "Email or password doesn't match.",
+				error: 'Could not fetch user' + err.message,
 			});
 		}
 	} catch (err) {
@@ -69,6 +130,14 @@ router.post('/signup', async (req, res) => {
 			error: 'Error creating user: ' + err.message,
 		});
 	}
+});
+
+router.post('/logout', (req, res) => {
+	// Clear the token cookie
+	res.clearCookie('token', { path: '/' });
+	res
+		.status(200)
+		.json({ message: 'Logged out successfully' });
 });
 
 module.exports = router;

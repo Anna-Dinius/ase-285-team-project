@@ -69,21 +69,19 @@ function GetAuthForm({ formName }) {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({
-						email: 'johndoe@todosburgers.com',
-						password: '123',
-					}),
+					body: JSON.stringify(formData),
 				}
 			);
 
 			if (response.ok) {
-				const result = await response.json();
-				console.log(result.message);
+				const data = await response.json();
+				console.log('Login successful:', data);
+
 				navigate('/dashboard');
 			} else {
 				console.log('sign in response: ' + response.body);
 				const error = await response;
-				console.error('Error:', error);
+				console.error('Login failed:', error);
 			}
 		} catch (err) {
 			console.error('Error: ', err.message);
