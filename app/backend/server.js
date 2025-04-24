@@ -24,6 +24,9 @@ app.use('/api/menus', menuRoutes);
 const menuItemRoutes = require('./routes/menuItemsRoutes');
 app.use('/api', menuItemRoutes);
 
+const authRoutes = require('./routes/user.routes');
+app.use('/api/auth', authRoutes);
+
 // You can test this by visiting http://localhost:5000/
 app.get('/', (req, res) => {
   res.send('NomNomSafe API is running');
