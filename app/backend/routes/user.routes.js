@@ -86,7 +86,40 @@ router.post('/signup', async (req, res) => {
 		});
 		const savedUser = await newUser.save();
 
-		res.status(201).json(savedUser);
+		if (!savedUser) {
+			return res.status(400).json({
+				error: 'Error saving user: ' + err.message,
+			});
+		}
+
+		console.log('saved user');
+		// Set name cookie
+		res.cookie('fullName', newUser.getFullName(), {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set email cookie
+		res.cookie('email', newUser.email, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set admin status cookie
+		res.cookie('isAdmin', newUser.admin, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set authorized status cookie
+		res.cookie('isAuthorized', true, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set hasBusiness cookie
+		res.cookie('hasBusiness', false, {
+			secure: true,
+			sameSite: 'None',
+		});
+
+		return res.status(201).json(savedUser);
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error creating user: ' + err.message,
