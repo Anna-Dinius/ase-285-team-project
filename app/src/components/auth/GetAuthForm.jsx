@@ -27,6 +27,7 @@ function GetAuthForm({ formName }) {
 				'http://localhost:5000/api/auth/signup',
 				{
 					method: 'POST',
+					credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
 					},
