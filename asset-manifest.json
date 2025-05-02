@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ase-285-team-project/static/css/main.5477c60c.css",
+    "main.js": "/ase-285-team-project/static/js/main.f2ebd312.js",
+    "static/media/menu-placeholder-right.jpg": "/ase-285-team-project/static/media/menu-placeholder-right.4b9cb8cbd32d6aeea028.jpg",
+    "static/media/menu-placeholder-left.jpg": "/ase-285-team-project/static/media/menu-placeholder-left.546c57ade73a48978f1b.jpg",
+    "index.html": "/ase-285-team-project/index.html",
+    "main.5477c60c.css.map": "/ase-285-team-project/static/css/main.5477c60c.css.map",
+    "main.f2ebd312.js.map": "/ase-285-team-project/static/js/main.f2ebd312.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5477c60c.css",
+    "static/js/main.f2ebd312.js"
+  ]
+}
