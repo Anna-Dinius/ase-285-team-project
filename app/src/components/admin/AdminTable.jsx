@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
 	MRT_TableBodyCellValue,
 	MRT_ToolbarAlertBanner,
@@ -62,7 +61,6 @@ const columns = [
 ];
 
 const AdminTable = () => {
-	const navigate = useNavigate();
 	const [data, setData] = useState([]);
 	const [message, setMessage] = useState('Something went wrong.');
 	const [showError, setShowError] = useState(false);

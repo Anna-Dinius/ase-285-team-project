@@ -1,5 +1,3 @@
-# Backend Module
-
 # **Backend Module**
 
 Manages backend functionality and server for MongoDB.

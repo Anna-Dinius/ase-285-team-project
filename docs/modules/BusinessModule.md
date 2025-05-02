@@ -1,5 +1,3 @@
-# Business Module
-
 # **Business Module**
 
 Manages business profile information and settings.

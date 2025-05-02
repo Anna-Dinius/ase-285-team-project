@@ -36,6 +36,7 @@ Handles user authentication, including login, signup, and credential management.
 | --- | --- | --- | --- | --- |
 | **`/api/auth/signup`** | **`POST`** | **`{ email, password, first_name, last_name }`** | **`signUp()`** | **`GetAuthForm.jsx`** |
 | **`/api/auth/signin`** | **`POST`** | **`{ email, password }`** | **`logIn()`** | **`GetAuthForm.jsx`** |
+| **`/api/auth/logout`** | **`POST`** | None | **`logout()`** | **`ProfileIcon.jsx`** |
 | **`/api/auth/edit-login`** | **`POST`** | **`{ credType, currentCred, newCred }`** | **`save()`** | **`EditLoginInfo.jsx`** |
 
 ---
@@ -55,8 +56,8 @@ Handles user authentication, including login, signup, and credential management.
 
 | **Scenario** | **Handling Method** | **File** |
 | --- | --- | --- |
-| Invalid Email | **`format.validateEmail()`** | **`GetAuthForm.jsx`** |
-| Weak Password | **`format.validatePassword()`** | **`GetAuthForm.jsx`** |
+| Invalid Email | **`format.validateEmail()`** | **`formValidation.js`** |
+| Short Password | **`format.validatePassword()`** | **`formValidation.js`** |
 | API Failures | **`try/catch`** with **`setMessage()`** | All files |
 
 ---
@@ -66,7 +67,6 @@ Handles user authentication, including login, signup, and credential management.
 | **File** | **Key Styles** | **Components Affected** |
 | --- | --- | --- |
 | **`auth.scss`** | Form layouts, input fields | All auth forms |
-| **`picklist.scss`** | Menu swap interface | **`MenuItemPicklist.jsx`** |
 
 ---
 

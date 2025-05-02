@@ -1,10 +1,10 @@
-## Testing Module
+# **Testing Module**
 
 Handles validation of application logic and data flow across key modules using Jest, Supertest, and MongoDB Memory Server.
 
 ---
 
-### Schema Tests (Unit)
+## **Schema Tests (Unit)**
 
 #### `User.test.js`
 
@@ -40,7 +40,7 @@ To catch issues with misconfigured database URIs, connection errors, or missing 
 
 ---
 
-### Route Tests (Integration)
+## **Route Tests (Integration)**
 
 #### `userRoutes.test.js` – Authentication Module
 

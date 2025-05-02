@@ -1,5 +1,3 @@
-# Setup Module
-
 # **Setup Module**
 
 Guides users through business creation and initial configuration in a 3-step wizard.

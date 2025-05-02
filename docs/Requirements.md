@@ -1,10 +1,8 @@
 # Requirements
 
-# Requirements
-
 ---
 
-This application meets these requirements as user stories
+This application meets the requirements as user stories
 
 - As a new user, I should be able to create an account with my business email so I can create a profile for my restaurant(s).
 - As a returning user, I should be able to log in with my business email and password so I can access my restaurant’s page.
