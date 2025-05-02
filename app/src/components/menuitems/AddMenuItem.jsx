@@ -25,6 +25,11 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
     
     // Save single menuItem
     const handleSave = async () => {
+        if (!formData.name || formData.name.trim() === '') {
+            alert('Please enter a name for the menu item.');
+            return;
+        }
+
         try {
             const menuIDs = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
             const response = await axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
@@ -33,11 +38,11 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
                 ingredients: formData.ingredients,
                 allergens: formData.selectedAllergens || [],
                 menuIDs: menuIDs
-          });
-          alert('Item saved successfully!');
+            });
+            alert('Item saved successfully!');
         } catch (err) {
-          console.error('Error saving menu item:', err);
-          alert('Failed to save item.');
+            console.error('Error saving menu item:', err);
+            alert('Failed to save item.');
         }
     };
 
@@ -183,7 +188,15 @@ const AddMenuItemForm = () => {
         try {
             // Calculating what to save into the menuItems
             const menuIDs = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
-            const saveRequests = panels.map(panel =>
+    
+            const validPanels = panels.filter(panel => panel.name && panel.name.trim() !== '');
+            // Need names on those panels! Comparing # of panels to valid panels
+            if (validPanels.length !== panels.length) {
+                alert('One or more items are missing names. Please enter a name for each item before saving.');
+                return;
+            }
+            // handles saving the valid panels
+            const saveRequests = validPanels.map(panel =>
                 axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
                     name: panel.name,
                     description: panel.description,
@@ -192,21 +205,21 @@ const AddMenuItemForm = () => {
                     menuIDs: menuIDs
                 })
             );
-          await Promise.all(saveRequests);
-      
-          alert('All items saved successfully!');
+    
+            await Promise.all(saveRequests);
+            alert('All items saved successfully!');
         } catch (err) {
-          console.error('Error saving items:', err);
-          alert('Failed to save all items.');
+            console.error('Error saving items:', err);
+            alert('Failed to save all items.');
         }
-
+    
         // refresh the page.
         navigate(0, {
-			state: { menuID: menuID,
+            state: {
+                menuID: menuID,
                 menuTitle: menuTitle
-             },
-		});
-
+            },
+        });
     };
 
     // Loading in the panels

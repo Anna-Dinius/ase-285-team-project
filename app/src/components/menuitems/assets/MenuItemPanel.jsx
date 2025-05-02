@@ -21,6 +21,10 @@ const MenuItemPanel = ({ item, menuID, onSave, onDelete }) => {
   };
 
   const handleSave = () => {
+    if (!formData.name || formData.name.trim() === '') {
+        alert('Please enter a name for the menu item.');
+        return;
+    }
     onSave(formData);
     setIsEditing(false);
   };
