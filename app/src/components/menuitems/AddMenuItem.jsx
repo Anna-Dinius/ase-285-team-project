@@ -186,6 +186,7 @@ const AddMenuItemForm = () => {
     // must exist out side due to trying to get all of them.
     const handleSaveAll = async () => {
         try {
+            // Calculating what to save into the menuItems
             const menuIDs = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
     
             const validPanels = panels.filter(panel => panel.name && panel.name.trim() !== '');

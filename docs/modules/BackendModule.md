@@ -38,15 +38,28 @@ Manages backend functionality and server for MongoDB.
 | **Endpoint** | **Method** | **Request Body** | **Success Response** | **Error Cases** |
 | --- | --- | --- | --- | --- |
 | **`/api/auth/signin`** | **`POST`** | **`{ email: "user@example.com", password: "..." }`** | **`200`** + User data + cookies set | **`401`** (Invalid email/password), **`400`** (Missing fields) |
-| **`/api/businesses`** | **`POST`** | **`{ name: "Cafe", allergens: ["Dairy"], diets: ["Vegan"] }`** | **`201`** + Created business | **`400`** (Duplicate name), **`500`** (DB error) |
-| **`/api/menus`** | **`POST`** | **`{ title: "Lunch", description: "...", restaurant: "business_id" }`** | **`201`** + New menu | **`404`** (Business not found), **`400`** (Validation) |
-| **`/api/menuitems/add-menu-item`** | **`POST`** | **`{ name: "Salad", allergens: ["Nuts"], menuIDs: ["menu_id"] }`** | **`201`** + Saved item | **`400`** (Empty fields), **`500`** (Save failed) |
-| **`/api/menuitems/swap-menu/:id`** | **`PUT`** | **`{ menuIDs: ["new_menu_id"] }`** (Update item's menu associations) | **`200`** + Updated item | **`404`** (Item not found), **`400`** (Invalid ID) |
+| **`/api/businesses`** | **`GET`** | **` NONE`** | **`200`** + Found businesses  | **`400`** (Duplicate name), **`404`** ('No businesses found'), **`500`** ('Could not fetch businesses') |
+| **`/api/businesses/:id`** | **`GET`** | Requires **` {id: req.params.id}`** | **``**  Found business as json | **`404`** ('Business not found'),  **`500`** ('Could not fetch business') |
+| **`/api/businesses`** | **`POST`** | Requires **`{ name, url, address, allergens = [], diets = [] }`** req.body | **`201`** + Created business | **`400`** ('Business name already exists'), **`400`** ( 'Error creating business'), **`400`** ('Error associating new business with user'), **`400`** ('Error creating business: ' + err.message) |
+| **`/api/businesses/:id`** | **`PUT`** | Requires **` { name, url, address, allergens, diets, menus }`** req.body | **``**  updatedBusiness as json | **`400`** ('Business name already exists.'),  **`400`** ('Error updating business: ' + err.message),  **`404`** ('Business not found') |
+| **`/api/business/:id`** | **`DELETE`** | Requires **`{ id }`** req.params.id | **`201`** + Created business | **`404`** ('Business not found'), **`500`** ( 'Could not delete business') |
 | **`/api/admin/get-user-list`** | **`POST`** | Requires **`email`** cookie (auto-sent) | **`200`** + **`users[]`** | **`401`** (No business ID), **`401`** (No users with specified business ID), **`404`** (No users) |
 | **`/api/admin/change-admin-status`** | **`POST`** | Requires **`{action, targetEmail}`** req.body | **`200`** + **`{message: message}`** | **`400`** (Unknown action: ${action}), **`400`** ('At least one user must be an admin'), **`400`** ('Something went wrong'), **`400`** ('Error saving admin status'), **`400`** ('Error changing admin status: ' + err.message) |
-| **`/api/businesses/:id`** | **`GET`** | None (ID in URL) | **`200`** + Business data with populated menus | **`404`** (Business not found) |
-| **`PUT /api/menuitems/:id`** | **`PUT`** | **`{ name: "...", allergens: [...] }`** (Partial updates allowed) | **`200`** + Updated item | **`404`** (Item not found), **`400`** (Invalid data) |
-| **`DELETE /api/menuitems/:id`** | **`DELETE`** | None | **`200`** + **`{ message: "Deleted successfully" }`** | **`404`** (Item not found) |
+| **`/api/admin/remove-user-access`** | **`POST`** | Requires **`{targetEmail}`** req.body **`{business_id }`** cookie (auto-sent) | **`200`** + ('Removed user access successfully.') | **`400`** ('Business id not found.'), **`400`** ('At least one admin must be associated with the business'), **`400`** ('Error removing user access'), **`400`** ( 'Error changing business id: ' + err.message) |
+| **`/api/admin/add-user-access`** | **`POST`** | Requires **`{targetEmail}`** req.body **`{business_id }`** cookie (auto-sent) | **`200`** + **`('User access added successfully.') | **`400`** ('All fields are required.'), **`400`** (Business id not found. Business id: ${business_id}), **`400`** ('User does not exist'), **`400`** ( 'User has access to another business and cannot be added), **`400`** ('Error saving user access'),  **`400`** ( 'Error adding user access: ' + err.message)  |
+| **`/api/menuitems/add-menu-item`** | **`POST`** | **`{ name: "Salad", allergens: ["Nuts"], menuIDs: ["menu_id"] }`** | **`201`** + Saved item | **`400`** (Empty fields), **`500`** (Save failed) |
+| **`/api/menuitems/swap-menu/:id`** | **`PUT`** | **`{ menuIDs: ["new_menu_id"] }`** (Update item's menu associations) | **`200`** + Updated item | **`404`** (Item not found), **`400`** (Invalid ID) |
+| **`/api/menuitems/menuswap-menus/:id`** | **`PUT`** | **`{ menuIDs: ["new_menu_id"] }`** (Update item's menu associations) | **`200`** + Updated item | **`404`** (Item not found), **`400`** (Invalid ID), **`500`** ('Error editing menu item: ' + err.message) |
+| **`/api/menuitems/:menuName&:businessID`** | **`GET`** | Requires **`{ businessID }`**  req.query | **`200`** + Menus | **`500`** ('Could not fetch menus') |
+| **`/api/menuitems/menuswap-menus/:id`** | **`GET`** | Requires **`{ businessID }`**  req.query | **`200`** + Menus | **`500`** ('Could not fetch menus') |
+| **`/api/menuitems/menuswap-items/id`** | **`GET`** | Requires **`{ menuID }`**  req.query | **`200`** + menuItemss | **`500`** ('Could not fetch menu items') |
+| **`/api/menuitems/`** | **`GET`** | REquires **`{ menuID }`** req.query | **`200`** + menuItems | **`500`** ('Could not fetch menu items') |
+| **`/api/menuitems/:id`** | **`PUT`** | **`{ name: "...", allergens: [...] }`** (Partial updates allowed) | **`200`** + Updated item | **`404`** (Item not found), **`400`** (Invalid data) |
+| **`/api/menuitems/:id`** | **`DELETE`** | None | **`200`** + **`{ message: "Deleted successfully" }`** | **`404`** (Item not found) |
+| **`/api/menus`** | **`GET`** | **`NONE`** | **** + Menus | **`500`** ('Could not fetch menus')|
+| **`/api/menus`** | **`POST`** | **`{ title: "Lunch", description: "...", restaurant: "business_id" }`** | **`201`** + New menu | **`404`** (Business not found), **`400`** (Validation) |
+| **`/api/menus/update-title-description`** | **`PUT`** | Requires **`{ businessId, title, description }`** req.body | **`200`** + Updated menu | **`404`** (Business not found), **`404`** ('No menus found for business') |
+| **`/api/menus/:id`** | **`DELETE`** | Requires **`{ businessId, title, description }`** req.body | **``** + ('Menu deleted and business updated successfully') | **`404`** (Menu not found), **`500`** ('Could not delete menu: ' + err.message) |
 
 ---
 

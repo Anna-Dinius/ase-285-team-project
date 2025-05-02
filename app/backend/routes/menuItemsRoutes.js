@@ -28,7 +28,7 @@ router.get('/menu/', async (req, res) => {
         // get only the menu
         const menu = await Menu.findOne(filter);
 
-        res.json(menu || []);
+        res.status(200).json(menu || []);
     } catch (err) {
     console.error('Error fetching menu:', err);
     res.status(500).json({ error: 'Could not fetch menu' });
@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
 
     const menuitems = await MenuItem.find(filter);
 
-    res.json(menuitems || []);
+    res.status(200).json(menuitems || []);
   } catch (err) {
     console.error('Error fetching menu items:', err);
     res.status(500).json({ error: 'Could not fetch menu items' });
@@ -100,7 +100,7 @@ router.delete('/:id', async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ error: 'Menu Item not found' });
     }
-    res.json({ message: 'Menu item deleted successfully' });
+    res.status(200).json({ message: 'Menu item deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Could not delete menu item' });
   }
@@ -182,7 +182,7 @@ router.get('/menuswap-items', async (req, res) => {
 	  // Get the menu items 
     const menuItems = await MenuItem.find(filter);
 
-    res.json(menuItems || []);
+    res.status(200).json(menuItems || []);
   } catch (err) {
     console.error('Error fetching menu items:', err);
     res.status(500).json({ error: 'Could not fetch menu items' });
@@ -195,24 +195,24 @@ router.get('/menuswap-items', async (req, res) => {
 router.put('/swap-menu/:id', async (req, res) => {
     try {
         const { id } = req.params;
-      const { name, description, ingredients, allergens, menuIDs } = req.body;
-  
-      if (!id) {
-        return res.status(400).json({ error: 'Menu item ID is required' });
-      }
-      const updatedMenuItem = await MenuItem.findByIdAndUpdate(
-        id,
-        { name, description, ingredients, allergens, menuIDs },
-        { new: true, runValidators: true }
-      );
-  
-      if (!updatedMenuItem) {
-        return res.status(404).json({ error: 'Menu item not found' });
-      }
-  
-      res.status(200).json(updatedMenuItem);
+        const { name, description, ingredients, allergens, menuIDs } = req.body;
+    
+        if (!id) {
+            return res.status(400).json({ error: 'Menu item ID is required' });
+        }
+        const updatedMenuItem = await MenuItem.findByIdAndUpdate(
+            id,
+            { name, description, ingredients, allergens, menuIDs },
+            { new: true, runValidators: true }
+        );
+    
+        if (!updatedMenuItem) {
+            return res.status(404).json({ error: 'Menu item not found' });
+        }
+    
+        res.status(200).json(updatedMenuItem);
     } catch (err) {
-      res.status(500).json({ error: 'Error editing menu item: ' + err.message });
+        res.status(500).json({ error: 'Error editing menu item: ' + err.message });
     }
 });
 
