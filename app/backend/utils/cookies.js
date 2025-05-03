@@ -24,7 +24,6 @@ const setCookies = (res, user, extraFields = {}) => {
 
 	// Set each cookie
 	for (const [key, value] of Object.entries(cookies)) {
-		console.log('cookie value:', value);
 		res.cookie(key, value, options);
 	}
 };
