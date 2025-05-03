@@ -71,7 +71,6 @@ router.post('/', async (req, res) => {
 				message: 'Business name already exists.',
 			});
 		}
-		console.log('about to create new business');
 
 		const newBusiness = new Business({
 			name: name.trim(),
@@ -93,7 +92,6 @@ router.post('/', async (req, res) => {
 
 		const email = req.cookies.email;
 		const user = await User.findOne({ email: email });
-		console.log('user:', user);
 
 		if (!user) {
 			return res.status(400).json({
@@ -101,9 +99,8 @@ router.post('/', async (req, res) => {
 				message: 'Error associating new business with user.',
 			});
 		}
-		console.log('user.admin:', user.admin);
+
 		cookies.updateCookie(res, 'isAdmin', user.admin);
-		console.log('admin cookie set (supposedly)');
 
 		return res.status(201).json(savedBusiness);
 	} catch (err) {
