@@ -181,9 +181,22 @@ router.post('/remove-user-access', async (req, res) => {
 		}
 
 		const action = 'remove';
+		const foundUser = await User.findOne(
+			{ email: targetEmail },
+			{ admin: 1, _id: 0 }
+		);
+
+		if (!foundUser) {
+			// User not found in the DB
+			return res.status(400).json({
+				error: `User not found`,
+				message: `User not found.`,
+			});
+		}
+		
 		const conditionsMet = await checkConditions(action, targetEmail);
 
-		if (!conditionsMet) {
+		if (!conditionsMet && foundUser.admin) {
 			// Conditions are not met
 			// Target user is the only admin of the business
 			return res.status(400).json({

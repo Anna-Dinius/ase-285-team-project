@@ -12,7 +12,6 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
     const [selectedAllergens, setSelectedAllergens] = useState([]);
     const location = useLocation();
     const menuID = location.state?.menuID; 
-    const navigate = useNavigate();
 
     const togglePanel = () => {
         setIsOpen(!isOpen);
@@ -39,7 +38,9 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
                 allergens: formData.selectedAllergens || [],
                 menuIDs: menuIDs
             });
-            alert('Item saved successfully!');
+            if (response.ok){
+                alert('Item saved successfully!');
+            }
         } catch (err) {
             console.error('Error saving menu item:', err);
             alert('Failed to save item.');
@@ -74,11 +75,6 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
         };
         
         return selectedAllergens.map(value => allergenMap[value]).join(', ');
-    };
-
-    // Remove function for tags.
-    const removeAllergen = (id) => {
-        setSelectedAllergens((prev) => prev.filter((existingId) => existingId !== id));
     };
 
     return (

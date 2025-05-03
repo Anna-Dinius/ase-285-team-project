@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import Checkbox from './assets/Checkbox'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-// import '../../css/styles.css';
 import '../../css/picklist.scss';
 
 const MenuItemPicklist = () => {
@@ -63,13 +62,6 @@ const MenuItemPicklist = () => {
     const handleSearchChange = (menuID, value) => {
         setSearchTerms((prev) => ({ ...prev, [menuID]: value }));
     };
-
-    const filteredMenuItems = (menu, searchTerm) => {
-        return menuItems.filter(item => 
-          item.menuIDs.includes(menu._id) &&
-          item.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      };
 
       // menuItem checkbox changes
       const handleCheckboxChange = (compositeKey) => {
