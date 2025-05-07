@@ -105,7 +105,6 @@ function GetAuthForm({ formName }) {
 					navigate('/dashboard');
 				}
 			} else {
-				console.log('response not ok');
 				setMessage(result.message);
 				setShowError(true);
 			}
